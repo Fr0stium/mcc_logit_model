@@ -19,24 +19,20 @@ pub fn hazard_prime(x: f64) -> f64 {
 pub fn gaussian_elimination(matrix: &mut [Vec<f64>]) -> Vec<f64> {
     let size = matrix.len();
     assert_eq!(size, matrix[0].len() - 1);
-
     for i in 0..size - 1 {
         for j in i..size - 1 {
             echelon(matrix, i, j);
         }
     }
-
     for i in (1..size).rev() {
         eliminate(matrix, i);
     }
-
     #[allow(clippy::needless_range_loop)]
     for i in 0..size {
         if matrix[i][i] == 0f64 {
             println!("Infinitely many solutions");
         }
     }
-
     let mut result: Vec<f64> = vec![0f64; size];
     for i in 0..size {
         result[i] = matrix[i][size] / matrix[i][i];
