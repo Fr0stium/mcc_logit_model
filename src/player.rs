@@ -1,11 +1,15 @@
-use std::{cmp::Ordering, fs};
+use std::{
+    cmp::Ordering,
+    fs::File,
+    io::{BufRead, BufReader},
+};
 
 const MCC_COUNT: usize = 31;
 
 pub struct Player {
     pub skill: f64,
     pub username: String,
-    coin_history: Vec<i32>,
+    coin_history: [i32; MCC_COUNT],
 }
 
 impl Player {
@@ -38,17 +42,16 @@ impl Player {
 
 pub fn get_players() -> Vec<Player> {
     let mut players = Vec::new();
-    let path = "coins.txt";
-    let contents = fs::read_to_string(path).unwrap();
-    let contents: Vec<&str> = contents.split('\n').collect();
-    for line in contents {
+    let file = File::open("coins.txt").unwrap();
+    let reader = BufReader::new(file);
+    for line in reader.lines().flatten() {
         let info: Vec<&str> = line.split(',').collect();
         let username = String::from(info[0]);
-        let mut coin_history = Vec::new();
+        let mut coin_history = [-1i32; MCC_COUNT];
         let mut has_played = false;
-        for str in info.iter().skip(1).take(MCC_COUNT) {
-            let coins = str.parse().unwrap();
-            coin_history.push(coins);
+        for i in 1..MCC_COUNT + 1 {
+            let coins = info[i].parse().unwrap();
+            coin_history[i - 1] = coins;
             if !has_played && coins > 0 {
                 has_played = true;
             }
