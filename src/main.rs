@@ -11,17 +11,16 @@ fn generate_skill_levels() -> Vec<Player> {
         let mut gradient = vec![0f64; n + 1];
         // The hessian matrix augmented with the negative of the gradient matrix:
         let mut augmented_hessian = vec![vec![1f64; n + 2]; n + 1];
-        for (i, opponent) in players.iter().enumerate() {
+        for (i, player) in players.iter().enumerate() {
             let mut gradient_sum = 0f64;
             let mut hessian_sum = 0f64;
-            for (j, player) in players.iter().enumerate() {
+            for (j, opponent) in players.iter().enumerate() {
                 let (player_wins, opponent_wins) = player.get_score_against(opponent);
-                let skill_difference = player.skill - opponent.skill;
-                gradient_sum += opponent_wins * math_utils::hazard(skill_difference)
-                    - player_wins * math_utils::hazard(-skill_difference);
-                augmented_hessian[i][j] = opponent_wins
-                    * math_utils::hazard_prime(skill_difference)
-                    + player_wins * math_utils::hazard_prime(-skill_difference);
+                let skill_difference = opponent.skill - player.skill;
+                gradient_sum += player_wins * math_utils::hazard(skill_difference)
+                    - opponent_wins * math_utils::hazard(-skill_difference);
+                augmented_hessian[i][j] = player_wins * math_utils::hazard_prime(skill_difference)
+                    + opponent_wins * math_utils::hazard_prime(-skill_difference);
                 hessian_sum -= augmented_hessian[i][j];
             }
             gradient[i] = gradient_sum;
