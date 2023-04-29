@@ -25,7 +25,6 @@ fn cdf(x: f64) -> f64 {
     0.5 * erf::erfc(-x / SQRT_2) // Normal distribution.
 }
 
-
 /// For a matrix equation Ax=b, this function takes the augmented matrix (A|b) and returns the solution x.
 pub fn gaussian_elimination(matrix: &mut [Vec<f64>]) -> Vec<f64> {
     let size = matrix.len();
