@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "mcc_probit_model"
+name = "mcc_logit_model"
 version = "0.1.0"
