@@ -1,28 +1,21 @@
-use statrs::function::erf;
-use std::f64::consts::{PI, SQRT_2};
-
 /// Evaluates the hazard rate of the probability distribution.
 pub fn hazard(x: f64) -> f64 {
-    if x >= 20.0 {
-        // Very good approximation for x > 20:
-        return x + 1.0 / x - 2.0 * x.powi(-3) + 10.0 * x.powi(-5) - 74.0 * x.powi(-7);
-    }
-    pdf(x) / (cdf(-x))
+    cdf(x)
 }
 
 /// Evaluates the derivative of the hazard rate of the probability distribution.
 pub fn hazard_prime(x: f64) -> f64 {
-    hazard(x) * (hazard(x) - x)
+    pdf(x)
 }
 
 /// Evaluates the density function of the probability distribution.
 fn pdf(x: f64) -> f64 {
-    (-0.5 * x * x).exp() / (2.0 * PI).sqrt() // Normal distribution.
+    (-x).exp() / ((-x).exp() + 1.0).powi(2)
 }
 
 /// Evaluates the distribution function of the probability distribution.
 fn cdf(x: f64) -> f64 {
-    0.5 * erf::erfc(-x / SQRT_2) // Normal distribution.
+    (1.0 + (-x).exp()).recip()
 }
 
 /// For a matrix equation Ax=b, this function takes the augmented matrix (A|b) and returns the solution x.
